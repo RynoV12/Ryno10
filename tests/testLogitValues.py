@@ -1,3 +1,23 @@
+import unittest
+import json
+import sys as system
+import io
+import pandas as pd
+import re
+import numpy as np
+
+# Execute code marked with #si-exercise
+with open("Lesson.ipynb", "r") as file:
+    f_str = file.read()
+
+doc = json.loads(f_str)
+code = [i for i in doc['cells'] if i['cell_type']=='code']
+si = {}
+for i in code:
+    for j in i['source']:
+        if "#si-exercise" in j:
+            exec(compile("".join(i['source']), '<string>', 'exec'))
+
 class TestCase(unittest.TestCase):
 
     def testLogitCorrectValues(self):
