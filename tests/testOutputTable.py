@@ -6,19 +6,17 @@ import pandas as pd
 import re
 import numpy as np
 
-
+# Execute code marked with #si-exercise
 with open("Lesson.ipynb", "r") as file:
     f_str = file.read()
 
 doc = json.loads(f_str)
-
 code = [i for i in doc['cells'] if i['cell_type']=='code']
 si = {}
 for i in code:
     for j in i['source']:
         if "#si-exercise" in j:
             exec(compile("".join(i['source']), '<string>', 'exec'))
-
 
 class TestCase(unittest.TestCase):
 
@@ -36,7 +34,8 @@ class TestCase(unittest.TestCase):
         output = system.stdout.getvalue()
         system.stdout = stdout
 
-        labels = bool(re.findall(r'[Cc]oef.*[Ss]t.*[Zz].*[Pp].*', output))
+        # Updated regex to match 'Coefficient', 'Standard Error', 'Z-Statistic', 'P-Value'
+        labels = bool(re.findall(r'Coefficient.*Standard Error.*Z-Statistic.*P-Value.*', output))
         sex = bool(re.findall(r'sex.*\d+.*\d+.*\d+.*\d+.*', output))
         age = bool(re.findall(r'age.*\d+.*\d+.*\d+.*\d+.*', output))
         educ = bool(re.findall(r'educ.*\d+.*\d+.*\d+.*\d+.*', output))

@@ -6,19 +6,17 @@ import pandas as pd
 import re
 import numpy as np
 
-
+# Execute code marked with #si-exercise
 with open("Lesson.ipynb", "r") as file:
     f_str = file.read()
 
 doc = json.loads(f_str)
-
 code = [i for i in doc['cells'] if i['cell_type']=='code']
 si = {}
 for i in code:
     for j in i['source']:
         if "#si-exercise" in j:
             exec(compile("".join(i['source']), '<string>', 'exec'))
-
 
 class TestCase(unittest.TestCase):
 
@@ -45,6 +43,7 @@ class TestCase(unittest.TestCase):
                      'standard_error': 1.1266207023561843,
                      'z_stat': 5.090830475148922,
                      'p_value': 3.56498650369634e-07}
+
         sexEq = (round(sex['coefficient'] - reg.results['sex']['coefficient'], 1) == 0) & \
                 (round(sex['standard_error'] - reg.results['sex']['standard_error'], 1) == 0) & \
                 (round(sex['z_stat'] - reg.results['sex']['z_stat'], 1) == 0) & \
@@ -62,25 +61,8 @@ class TestCase(unittest.TestCase):
                       (round(intercept['z_stat'] - reg.results['intercept']['z_stat'], 1) == 0) & \
                       (round(intercept['p_value'] - reg.results['intercept']['p_value'], 1) == 0)
 
-        sexEq2 = (round(sex['coefficient'] - reg.results['sex']['coefficient'], 1) == 0) & \
-                 (round(sex['standard_error'] - reg.results['sex']['standard_error'], 1) == 0) & \
-                 (round(sex['z_stat'] - reg.results['sex']['z_stat'], 1) == 0) & \
-                 (round(sex['p_value']/2 - reg.results['sex']['p_value'], 1) == 0)
-        ageEq2 = (round(age['coefficient'] - reg.results['age']['coefficient'], 1) == 0) & \
-                 (round(age['standard_error'] - reg.results['age']['standard_error'], 1) == 0) & \
-                 (round(age['z_stat'] - reg.results['age']['z_stat'], 1) == 0) & \
-                 (round(age['p_value']/2 - reg.results['age']['p_value'], 1) == 0)
-        educEq2 = (round(educ['coefficient'] - reg.results['educ']['coefficient'], 1) == 0) & \
-                  (round(educ['standard_error'] - reg.results['educ']['standard_error'], 1) == 0) & \
-                  (round(educ['z_stat'] - reg.results['educ']['z_stat'], 1) == 0) & \
-                  (round(educ['p_value']/2 - reg.results['educ']['p_value'], 1) == 0)
-        interceptEq2 = (round(intercept['coefficient'] - reg.results['intercept']['coefficient'], 1) == 0) & \
-                       (round(intercept['standard_error'] - reg.results['intercept']['standard_error'], 1) == 0) & \
-                       (round(intercept['z_stat'] - reg.results['intercept']['z_stat'], 1) == 0) & \
-                       (round(intercept['p_value']/2 - reg.results['intercept']['p_value'], 1) == 0)
-        
+        # Removed the one-tailed p-value check
         self.assertTrue(
-            (sexEq & ageEq & educEq & interceptEq) |
-            (sexEq2 & ageEq2 & educEq2 & interceptEq2),
+            sexEq & ageEq & educEq & interceptEq,
             "Your coefficients are not correctly calculated."
         )
